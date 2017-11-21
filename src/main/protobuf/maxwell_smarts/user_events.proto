@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "zendesk/protobuf.proto";
+
+package com.zendesk.maxwellsmarts.zendesk.userevents;
+option java_multiple_files = true;
+
+enum IdentityType {
+    UNKNOWN_IDENTITY_TYPE = 0;
+    AGENT_FORWARDING = 1;
+    ANY_CHANNEL = 2;
+    EMAIL = 3;
+    FACEBOOK = 4;
+    FOREIGN = 5;
+    GOOGLE = 6;
+    PHONE_NUMBER = 7;
+    SDK = 8;
+    TWITTER = 9;
+}
+
+message UserIdentity {
+    int64 id = 1;
+    IdentityType identity_type = 2;
+    string value = 3;
+}
+
+enum EventType {
+    UNKNOWN_EVENT_TYPE = 0;
+    IDENTITY_CREATION = 1;
+}
+
+message UserEvent {
+    EventType event_type = 1;
+    oneof event_data {
+        UserIdentity identity_creation = 2;
+    }
+}
+
+message UserEvents {
+    com.zendesk.protobuf.ProtobufHeader header = 1;
+    reserved 2 to 4;
+    int32 account_id = 5;
+    int64 actor_id = 6;
+    int64 user_id = 7;
+    repeated UserEvent events = 8;
+}

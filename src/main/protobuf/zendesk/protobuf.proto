@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.zendesk.protobuf;
+
+message ProtobufHeader {
+  enum SchemaFormat {
+    UNKNOWN = 0;
+    PATH = 1; // simple "project/entity.proto"
+    // reserved for future use (fingerprinting etc)
+  };
+  SchemaFormat schema_format = 1;
+  string schema_path = 2;
+  // reserved for future use ...
+}
+
+// Supertype of all zendesk toplevel protobuf messages
+message TypedEvent {
+  ProtobufHeader header = 1;
+}

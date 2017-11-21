@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "zendesk/protobuf.proto";
+
+package com.zendesk.maxwellsmarts.zendesk.ticketevents;
+option java_multiple_files = true;
+
+enum TicketStatus {
+    UNKNOWN_TICKET_STATUS = 0;
+    NEW = 1;
+    OPEN = 2;
+    PENDING = 3;
+    HOLD = 4;
+    SOLVED = 5;
+    CLOSED = 6;
+    DELETED = 7;
+    ARCHIVED = 8;
+}
+
+message Comment {
+    string text = 1;
+    bool public = 2;
+}
+
+message TicketCreation {
+    int64 requester_id = 1;
+    TicketStatus status = 2;
+    Comment comment = 3;
+    Assignment assignment = 4;
+}
+
+message Assignment {
+    int64 user_id = 1;
+    int64 group_id = 2;
+}
+
+message AssignmentChange {
+    Assignment previous = 1;
+    Assignment current = 2;
+}
+
+message StatusChange {
+    TicketStatus previous = 1;
+    TicketStatus current = 2;
+}
+
+enum EventType {
+    UNKNOWN_EVENT_TYPE = 0;
+    TICKET_CREATION = 1;
+    COMMENT_CREATION = 2;
+    STATUS_CHANGE = 3;
+    ASSIGNMENT_CHANGE = 4;
+}
+
+message TicketEvent {
+    EventType event_type = 1;
+    oneof event_data {
+        TicketCreation ticket_creation = 2;
+        Comment comment_creation = 3;
+        StatusChange status_change = 4;
+        AssignmentChange assignment_change = 5;
+    }
+}
+
+message TicketEvents {
+    com.zendesk.protobuf.ProtobufHeader header = 1;
+    reserved 2 to 4;
+    int32 account_id = 5;
+    int64 actor_id = 6;
+    int64 ticket_id = 7;
+    repeated TicketEvent events = 8;
+}
